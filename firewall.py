@@ -9,12 +9,12 @@ RULES_FILE = "config/rules.json"
 # Setup logging
 logging.basicConfig(filename="logs/firewall.log", level=logging.INFO, format="%(asctime)s - %(message)s")
 
-def load_rules():
+def rules():
     with open(RULES_FILE, "r") as f:
         return json.load(f)
 
-def is_stealth_block(packet, rules):
-    ip = IP(packet.get_payload())
+def stealth(packet, rules):
+    ip = IP(packet.payload())
 
     # Block ICMP
     if ip.haslayer(ICMP) and rules.get("block_icmp", False):
@@ -28,10 +28,10 @@ def is_stealth_block(packet, rules):
 
     return False
 
-def process_packet(packet):
-    rules = load_rules()
-    if is_stealth_block(packet, rules):
-        ip = IP(packet.get_payload())
+def processpacket(packet):
+    rules = rules()
+    if stealth(packet, rules):
+        ip = IP(packet.payload())
         logging.info(f"Dropped: {ip.src} -> {ip.dst} [{ip.proto}]")
         packet.drop()
     else:
@@ -40,7 +40,7 @@ def process_packet(packet):
 def main():
     print("[*] Stealth Firewall Starting...")
     nfqueue = NetfilterQueue()
-    nfqueue.bind(1, process_packet)
+    nfqueue.bind(1, processpacket)
     try:
         nfqueue.run()
     except KeyboardInterrupt:
