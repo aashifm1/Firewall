@@ -1,0 +1,4 @@
+{
+  "block_icmp": true,
+  "blocked_ports": [22, 23, 135, 139, 445]
+}
