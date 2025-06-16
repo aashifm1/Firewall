@@ -4,7 +4,7 @@ import logging
 import json
 
 # Load firewall rules from external JSON
-RULES_FILE = "config/rules.json"
+RULES_FILE = "Rules.json"
 
 # Setup logging
 logging.basicConfig(filename="logs/firewall.log", level=logging.INFO, format="%(asctime)s - %(message)s")
